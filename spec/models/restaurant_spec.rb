@@ -36,3 +36,16 @@ describe 'reviews' do
     end
   end
 end
+
+# describe 'deleted restaurants' do 
+
+#   it 'deletes a restaurant' do 
+#     user1 = User.create(email: 'test1@test.com')
+#     user2 = User.create(email: 'test2@test.com')
+#     restaurant = Restaurant.new(name: 'Italian'))
+#     restaurant.user << user1
+#     restaurant.save
+#     # expect {restaurant.user}.to raise_error
+#   end
+
+# end

@@ -1,4 +1,7 @@
 class ReviewsController < ApplicationController
+
+  # before_filter :require_permission, only: :update,
+  before_action :authenticate_user!
   
   def new 
     @restaurant = Restaurant.find(params[:restaurant_id])
@@ -13,11 +16,8 @@ class ReviewsController < ApplicationController
       redirect_to restaurants_path
     else
       if @review.errors[:user]
-        # Note: if you have correctly disabled the review button where appropriate,
-        # this should never happen...
         redirect_to restaurants_path, alert: 'You have already reviewed this restaurant'
       else
-        # Why would we render new again?  What else could cause an error?
         render :new
       end
     end
@@ -27,10 +27,24 @@ class ReviewsController < ApplicationController
     params.require(:review).permit(:thoughts, :rating)
   end
 
-end
+  def update 
+    # @restaurant = Restaurant.find params[:restaurant_id]
+    # @review = @restaurant.reviews.build_with_user review_params, current_user
 
+    # if @review.save
+    #   redirect_to restaurants_path
+    # else
+    #   if @review.errors[:user]
+    #     redirect_to restaurants_path, alert: 'This is not your review'
+    #   else
+    #     render :new
+    #   end
+    # end
+  end 
 
+  # def delete 
+  #   @restaurant = Restaurant.find params[:restaurant_id]
+  #   @review = @restaurant.reviews.build_with_user review_params, current_user
+  # end
 
-def create
-  
 end
