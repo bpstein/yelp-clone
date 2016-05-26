@@ -31,17 +31,21 @@ class RestaurantsController < ApplicationController
 
   def edit 
     @restaurant = Restaurant.find(params[:id])
+    if current_user != @restaurant.user 
+      redirect_to restaurants_path, alert: "This is not your Restaurant!"
+    end
   end
 
   def update 
     @restaurant = Restaurant.find(params[:id])
     @restaurant.update(restaurant_params)
-    redirect_to '/restaurants'
+    flash[:notice] = 'Restaurant updated successfully'
+    redirect_to restaurants_path  
   end
 
   def destroy 
     @restaurant = Restaurant.find(params[:id])
-      if current_user == @restaurant.user 
+    if current_user == @restaurant.user 
       @restaurant.destroy 
       flash[:notice] = 'Restaurant deleted successfully'
       redirect_to restaurants_path
