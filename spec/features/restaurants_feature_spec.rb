@@ -11,6 +11,13 @@ feature 'restaurants' do
 
   context 'restaurants have been added' do
     before do
+      visit '/restaurants'
+      expect(current_path).to eq('/restaurants')
+      click_link('Sign up')
+      fill_in('Email', with: 'user@email.com')
+      fill_in('Password', with: 'bananas')
+      fill_in('Password confirmation', with: 'bananas')
+      click_button('Sign up')
       Restaurant.create(name: 'KFC')
     end
 
@@ -23,16 +30,16 @@ feature 'restaurants' do
 
   context 'creating restaurants' do
     before do 
-      visit '/'
-      click_link('Sign Up')
+      visit '/restaurants'
+      click_link('Sign up')
       fill_in('Email', with: 'user@email.com')
       fill_in('Password', with: 'bananas')
       fill_in('Password confirmation', with: 'bananas')
-      click_button('Sign Up')
+      click_button('Sign up')
     end
 
     scenario 'prompts a registered user to fill out a form, then displays the new restaurant' do
-      visit '/'
+      visit '/restaurants'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'KFC'
       click_button 'Create Restaurant'
@@ -42,6 +49,17 @@ feature 'restaurants' do
   end
 
   context 'an invalid restaurant' do
+    before do
+      visit '/restaurants'
+      expect(current_path).to eq('/restaurants')
+      click_link('Sign up')
+      fill_in('Email', with: 'user@email.com')
+      fill_in('Password', with: 'bananas')
+      fill_in('Password confirmation', with: 'bananas')
+      click_button('Sign up')
+      Restaurant.create(name: 'KFC')
+    end
+
     it 'does not let you submit a name that is too short' do
       visit '/'
       click_link 'Add a restaurant'
@@ -68,11 +86,11 @@ feature 'restaurants' do
     before do 
       Restaurant.create name: 'KFC' 
       visit '/'
-      click_link('Sign Up')
+      click_link('Sign up')
       fill_in('Email', with: 'user@email.com')
       fill_in('Password', with: 'bananas')
       fill_in('Password confirmation', with: 'bananas')
-      click_button('Sign Up')
+      click_button('Sign up')
     end
     
 
@@ -90,7 +108,16 @@ feature 'restaurants' do
 
 
   context 'deleting restaurants' do
-    before { Restaurant.create name: 'KFC' }
+    before do
+      visit '/restaurants'
+      expect(current_path).to eq('/restaurants')
+      click_link('Sign up')
+      fill_in('Email', with: 'user@email.com')
+      fill_in('Password', with: 'bananas')
+      fill_in('Password confirmation', with: 'bananas')
+      click_button('Sign up')
+      Restaurant.create(name: 'KFC')
+    end
 
     scenario 'removes a restaurant when a user clicks a delete link' do
       visit '/restaurants'
