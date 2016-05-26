@@ -22,8 +22,17 @@ feature 'restaurants' do
   end
 
   context 'creating restaurants' do
-    scenario 'prompts user to fill out a form, then displays the new restaurant' do
-      visit '/restaurants'
+    before do 
+      visit '/'
+      click_link('Sign Up')
+      fill_in('Email', with: 'user@email.com')
+      fill_in('Password', with: 'bananas')
+      fill_in('Password confirmation', with: 'bananas')
+      click_button('Sign Up')
+    end
+
+    scenario 'prompts a registered user to fill out a form, then displays the new restaurant' do
+      visit '/'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'KFC'
       click_button 'Create Restaurant'
@@ -34,7 +43,7 @@ feature 'restaurants' do
 
   context 'an invalid restaurant' do
     it 'does not let you submit a name that is too short' do
-      visit '/restaurants'
+      visit '/'
       click_link 'Add a restaurant'
       fill_in 'Name', with: 'kf'
       click_button 'Create Restaurant'
@@ -55,10 +64,20 @@ feature 'restaurants' do
   end
 
   context 'editing restaurants' do 
-    before { Restaurant.create name: 'KFC' }
+
+    before do 
+      Restaurant.create name: 'KFC' 
+      visit '/'
+      click_link('Sign Up')
+      fill_in('Email', with: 'user@email.com')
+      fill_in('Password', with: 'bananas')
+      fill_in('Password confirmation', with: 'bananas')
+      click_button('Sign Up')
+    end
+    
 
     scenario 'let a user edit a restaurant' do 
-      visit '/restaurants'
+      visit '/'
       click_link 'Edit KFC'
       fill_in 'Name', with: 'Kentucky Fried Chicken'
       fill_in 'Description', with: 'Deep fried goodness'
