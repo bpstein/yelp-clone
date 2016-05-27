@@ -28,23 +28,22 @@ class ReviewsController < ApplicationController
   end
 
   def update 
-    # @restaurant = Restaurant.find params[:restaurant_id]
-    # @review = @restaurant.reviews.build_with_user review_params, current_user
+    @restaurant = Restaurant.find(params[:id])
+    @review = @restaurant.reviews.build_with_user review_params, current_user
+    @review.update(review_params)
+    flash[:notice] = 'Review updated successfully'
+    redirect_to restaurants_path  
+  end
 
-    # if @review.save
-    #   redirect_to restaurants_path
-    # else
-    #   if @review.errors[:user]
-    #     redirect_to restaurants_path, alert: 'This is not your review'
-    #   else
-    #     render :new
-    #   end
-    # end
-  end 
-
-  # def delete 
-  #   @restaurant = Restaurant.find params[:restaurant_id]
-  #   @review = @restaurant.reviews.build_with_user review_params, current_user
-  # end
-
+  def destroy 
+    @restaurant = Restaurant.find(params[:id])
+    @review = @restaurant.reviews.build_with_user review_params, current_user
+    if current_user == @restaurant.user 
+      @review.destroy 
+      flash[:notice] = 'Review deleted successfully'
+      redirect_to restaurants_path
+    else
+      redirect_to restaurants_path, alert: "This is not your Review!"
+    end
+  end
 end
