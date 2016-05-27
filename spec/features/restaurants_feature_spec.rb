@@ -94,14 +94,23 @@ feature 'restaurants' do
     end
     
 
-    scenario 'let a user edit a restaurant' do 
+    scenario 'allows a user to edit their own restaurant' do 
       visit '/'
-      click_link 'Edit KFC'
+      click_link('Add a restaurant')
+      fill_in('Name', with: 'Pizza Joint')
+      click_button 'Create Restaurant'
+      click_link 'Edit Pizza Joint'
       fill_in 'Name', with: 'Kentucky Fried Chicken'
       fill_in 'Description', with: 'Deep fried goodness'
       click_button 'Update Restaurant'
-      expect(page).to have_content 'Kentucky Fried Chicken'
-      expect(page).to have_content 'Deep fried goodness'
+      expect(page).to have_content 'KFC'
+      expect(page).not_to have_content 'This is not your Restaurant!'
+    end
+
+    scenario "prevents a user from editing someone else's restaurant" do 
+      visit '/'
+      click_link 'Edit KFC'
+      expect(page).to have_content 'This is not your Restaurant!'
       expect(current_path).to eq '/restaurants'
     end
   end
@@ -116,14 +125,24 @@ feature 'restaurants' do
       fill_in('Password', with: 'bananas')
       fill_in('Password confirmation', with: 'bananas')
       click_button('Sign up')
-      Restaurant.create(name: 'KFC')
+      Restaurant.create(name: 'Pizza Place')
     end
 
     scenario 'removes a restaurant when a user clicks a delete link' do
       visit '/restaurants'
-      click_link 'Delete KFC'
-      expect(page).not_to have_content 'KFC'
+      click_link('Add a restaurant')
+      fill_in('Name', with: 'Pizza Joint')
+      click_button 'Create Restaurant'
+      click_link 'Delete Pizza Joint'
+      expect(page).not_to have_content 'Pizza Joint'
       expect(page).to have_content 'Restaurant deleted successfully'
+    end
+
+    scenario "prevents a user from editing someone else's restaurant" do 
+      visit '/'
+      click_link 'Delete Pizza Place'
+      expect(page).to have_content 'This is not your Restaurant!'
+      expect(current_path).to eq '/restaurants'
     end
   end
 
